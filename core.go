@@ -4,13 +4,11 @@ import (
 	"fmt"
 	"github.com/godbus/dbus/v5"
 	"log"
-	"os/exec"
 	"reflect"
 	"runtime"
 	"time"
 )
 
-// NotificationHandler listens for notification actions
 type NotificationHandler struct {
 	conn *dbus.Conn
 }
@@ -19,20 +17,12 @@ var notificationHandler *NotificationHandler
 
 func init() {
 	log.Printf("Running on Go %s", runtime.Version())
-
-	_, err := exec.LookPath("loginctl")
-	if err != nil {
-		log.Printf("Warning: loginctl not found in PATH. Systemd logout method may not work.")
-	}
-
 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
-
 	conn, err := dbus.SessionBus()
 	if err != nil {
 		log.Printf("Warning: D-Bus session bus not available: %v", err)
 		log.Printf("Notifications may not work properly")
 	}
-
 	notificationHandler = &NotificationHandler{
 		conn: conn,
 	}
