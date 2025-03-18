@@ -1,4 +1,4 @@
-module notify
+module github.com/Bishwas-py/notify
 
 go 1.23
 
