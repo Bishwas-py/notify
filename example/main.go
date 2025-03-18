@@ -1,9 +1,10 @@
-package main
+package notify
 
 import (
 	"fmt"
 	"github.com/godbus/dbus/v5"
 	"log"
+	"notify"
 	"os/exec"
 	"time"
 )
@@ -44,7 +45,7 @@ func HandleCall() {
 }
 
 func main() {
-	actions := Actions{
+	actions := notify.Actions{
 		{
 			Title:   "Logout Now",
 			Trigger: HandleLogout,
@@ -57,7 +58,7 @@ func main() {
 
 	timeout := 10 * time.Second
 
-	notification := Notification{
+	notification := notify.Notification{
 		AppID:   "example",
 		Title:   "Hello, World!",
 		Body:    "This is an example notification",

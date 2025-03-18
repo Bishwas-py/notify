@@ -1,4 +1,4 @@
-module notify-bishwas
+module notify
 
 go 1.23
 
