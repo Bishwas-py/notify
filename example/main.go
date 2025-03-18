@@ -65,6 +65,7 @@ func main() {
 		Timeout: int(timeout),
 		Actions: actions,
 	}
+	notification.SetSoundByName("alarm-clock-elapsed")
 
 	_, _ = notification.Trigger()
 }
