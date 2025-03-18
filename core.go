@@ -59,6 +59,13 @@ func (h *NotificationHandler) SendNotification(
 	return id, nil
 }
 
+func (h *NotificationHandler) CloseNotification(id uint32) error {
+	obj := h.conn.Object("org.freedesktop.Notifications", "/org/freedesktop/Notifications")
+
+	call := obj.Call("org.freedesktop.Notifications.CloseNotification", 0, id)
+	return call.Err
+}
+
 // Listen starts listening for notification action signals
 func (h *NotificationHandler) Listen(actionHandlers map[string]func(), notificationID uint32, timeout int) error {
 	if err := h.conn.AddMatchSignal(
@@ -94,15 +101,18 @@ actionLoop:
 				if handler, ok := actionHandlers[actionKey]; ok {
 					handler()
 					_ = h.conn.Close()
+					_ = h.CloseNotification(notificationID)
 					break actionLoop
 				}
 			}
 			if v.Name == "org.freedesktop.Notifications.NotificationClosed" {
+				_ = h.CloseNotification(notificationID)
 				break actionLoop
 			}
 
 		case <-timer.C:
 			println("Timeout reached, breaking loop")
+			_ = h.CloseNotification(notificationID)
 			break actionLoop
 		}
 	}

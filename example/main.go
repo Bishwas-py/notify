@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
+	"github.com/Bishwas-py/notify"
 	"github.com/godbus/dbus/v5"
 	"log"
-	"notify"
 	"os/exec"
 	"time"
 )
