@@ -65,7 +65,7 @@ func main() {
 		Timeout: int(timeout),
 		Actions: actions,
 	}
-	notification.SetSoundByName("alarm-clock-elapsed")
+	notification.SetSoundByName("message-new-instant")
 
 	_, _ = notification.Trigger()
 }

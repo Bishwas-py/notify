@@ -75,8 +75,16 @@ func (h *NotificationHandler) Listen(actionHandlers map[string]func(), notificat
 		return fmt.Errorf("failed to add match: %v", err)
 	}
 
-	c := make(chan *dbus.Signal, 10)
+	c := make(chan *dbus.Signal, 1)
 	h.conn.Signal(c)
+
+	defer func() {
+		_ = h.conn.RemoveMatchSignal(
+			dbus.WithMatchInterface("org.freedesktop.Notifications"),
+			dbus.WithMatchMember("ActionInvoked"),
+		)
+		h.conn.RemoveSignal(c)
+	}()
 
 	timer := time.NewTimer(time.Duration(timeout))
 	defer timer.Stop()
@@ -90,14 +98,14 @@ actionLoop:
 				break actionLoop
 			}
 
+			curNid := v.Body[0].(uint32)
+			if curNid != notificationID {
+				continue
+			}
 			if v.Name == "org.freedesktop.Notifications.ActionInvoked" {
-				curNid := v.Body[0].(uint32) // Current Notification ID
 				actionKey := v.Body[1].(string)
 
 				log.Printf("Notification %d: Action %s invoked %d\n", curNid, actionKey, notificationID)
-				if curNid != notificationID {
-					continue
-				}
 				if handler, ok := actionHandlers[actionKey]; ok {
 					handler()
 					_ = h.conn.Close()
