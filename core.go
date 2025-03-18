@@ -108,7 +108,6 @@ actionLoop:
 				log.Printf("Notification %d: Action %s invoked %d\n", curNid, actionKey, notificationID)
 				if handler, ok := actionHandlers[actionKey]; ok {
 					handler()
-					_ = h.conn.Close()
 					_ = h.CloseNotification(notificationID)
 					break actionLoop
 				}
