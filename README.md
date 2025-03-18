@@ -6,7 +6,7 @@ environments.
 ## Installation
 
 ```
-go get github.com/yourusername/gonotify
+go get github.com/Bishwas-py/notify
 ```
 
 ## Features
